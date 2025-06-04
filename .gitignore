@@ -1,0 +1,26 @@
+# CMake build directories
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+Makefile
+cmake_install.cmake
+
+# IDE metadata
+.idea/
+*.iml
+
+# Compiled binaries and object files
+Matrix
+*.out
+*.o
+*.exe
+
+# Log files
+*.log
+
+# Misc
+*.swp
+
+#main test
+main.exe
+wet/main.cpp
