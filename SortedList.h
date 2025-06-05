@@ -13,7 +13,6 @@ namespace mtm {
 
     template <typename T>
     class SortedList {
-        //begin with int version, test and then change everything to T
         // use dummy head, same as with blockchain
         Node<T>* head = nullptr;
         unsigned int length = 0;
@@ -44,6 +43,85 @@ namespace mtm {
                 ++length;
             }
             }
+        //assignment operator - returns reference
+        SortedList& operator =(const SortedList& toCopy){
+            //avoid self-assignment
+            if (this == &toCopy){
+                return *this;
+            }
+            //delete info from current - loop through and delete
+            Node<T>* current = head;
+            while(current){
+                Node<T>* next = current->next;
+                delete current;
+                current = next;
+            }
+            //new dummy pointer
+            head = new Node<T>;
+            head -> next = nullptr;
+            length = 0;
+            //now actually copy everything
+            Node<T>* source = toCopy.head->next;
+            Node<T>* tail = head;
+            while(source){
+                Node<T>* newNode = new Node<T>;
+                newNode->value = source->value;
+                newNode->next = nullptr;
+                //tail is a pointer to a node - the following command sends head's pointer to
+                //newNode, and then tail itself goes to point to that next object
+                tail->next = newNode;
+                tail = newNode;
+
+                source = source->next;
+                ++length;
+            }
+        return *this;
+        }
+        void Insert(const T& x){
+            //deal with empty lists
+            if(!head->next){
+                Node<T>* newNode = new Node<T>;
+                newNode->value = x;
+                newNode->next = nullptr;
+                head->next = newNode;
+                ++length;
+                return;
+            }
+            //traverse the list until you find an element smaller than it
+            Node<T>* iterator = head->next;
+            while(iterator->next){
+                if(x > iterator->value){
+                    //create new node with smaller value, which points at iterator->next
+                    Node<T>* newNode = new Node<T>;
+                    newNode->value = iterator->value;
+                    newNode->next = iterator->next;
+                    //change current node value to x
+                    iterator->value = x;
+                    iterator->next = newNode;
+                    ++length;
+                    return;
+                }
+                //keep moving along the list
+                iterator = iterator->next;
+            }
+            //we've gotten to the end of the list - check > for last list node
+            if(x > iterator->value){
+                Node<T>* newNode = new Node<T>;
+                newNode->value = iterator->value;
+                newNode->next = iterator->next;
+                //change current node value to x
+                iterator->value = x;
+                iterator->next = newNode;
+            } else{
+                Node<T>* newNode = new Node<T>;
+                newNode->value = x;
+                newNode->next = nullptr;
+                iterator->next = newNode;
+            }
+            ++length;
+        }
+        class ConstIterator;
+
 
 
 
