@@ -43,6 +43,14 @@ namespace mtm {
                 ++length;
             }
             }
+        ~SortedList() {
+            Node<T>* current = head;
+            while(current){
+                Node<T>* next = current->next;
+                delete current;
+                current = next;
+            }
+        }
         //assignment operator - returns reference
         SortedList& operator =(const SortedList& toCopy){
             //avoid self-assignment
