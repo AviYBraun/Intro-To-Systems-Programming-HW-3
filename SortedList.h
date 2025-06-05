@@ -6,8 +6,47 @@
 namespace mtm {
 
     template <typename T>
+    struct Node{
+        T value = T();
+        Node* next = nullptr;
+    };
+
+    template <typename T>
     class SortedList {
+        //begin with int version, test and then change everything to T
+        // use dummy head, same as with blockchain
+        Node<T>* head = nullptr;
+        unsigned int length = 0;
+
     public:
+        //default c'tor to list with dummy cell
+        SortedList() {
+            head = new Node<T>;
+            head->next = nullptr;
+            length = 0;
+        };
+        //copy c'tor
+        SortedList(const SortedList& toCopy){
+            //create dummy pointer
+            head = new Node<T>;
+            head -> next = nullptr;
+            length = 0;
+
+            Node<T>* source = toCopy.head->next;
+            Node<T>* tail = head;
+
+            while(source){
+                Node<T>* newNode = new Node<T>;
+                newNode->value = source->value;
+                tail->next = newNode;
+                tail = newNode;
+                source = source->next;
+                ++length;
+            }
+            }
+
+
+
         /**
          *
          * the class should support the following public interface:
