@@ -129,7 +129,53 @@ namespace mtm {
             ++length;
         }
         class ConstIterator;
+        void Remove(ConstIterator iterator){
+            //this function assumes for the existence of the iterator class and specifically the
+            //() method that allows us to access any term in the list
 
+            //if the iterator is the end, there is nothing to remove
+            if(iterator == end()){
+                return;
+            }
+
+            unsigned int index = iterator.index;
+            if(index >= length){
+                throw std::out_of_range("Iterator out of range");
+            }
+            //deal with removing first term
+            if(index == 0){
+                Node<T>* toDelete = head->next;
+                head->next = toDelete->next;
+                delete toDelete;
+                --length;
+                return;
+            }
+            Node<T>* previous = head->next;
+            //move to node right before one we want to remove
+            for (unsigned int i = 0; i < index; ++i){
+                previous = previous.next;
+            }
+            Node<T>* toDelete = previous->next;
+            previous->next = toDelete->next;
+            delete toDelete;
+            --length;
+
+        }
+
+
+        //begin and end iterator methods for sortedlist
+        ConstIterator begin(){
+            return ConstIterator(head->next, 0);
+        }
+        ConstIterator end(){
+            return ConstIterator(nullptr, length);
+        }
+        ConstIterator begin() const{
+            return ConstIterator(head->next, 0);
+        }
+        ConstIterator end() const{
+            return ConstIterator(nullptr, length);
+        }
 
 
 
@@ -161,22 +207,47 @@ namespace mtm {
 
     template <class T>
     class SortedList<T>::ConstIterator {
-    /**
-     * the class should support the following public interface:
-     * if needed, use =defualt / =delete
-     *
-     * constructors and destructor:
-     * 1. a ctor(or ctors) your implementation needs
-     * 2. copy constructor
-     * 3. operator= - assignment operator
-     * 4. ~ConstIterator() - destructor
-     *
-     * operators:
-     * 5. operator* - returns the element the iterator points to
-     * 6. operator++ - advances the iterator to the next element
-     * 7. operator!= - returns true if the iterator points to a different element
-     *
-     */
+        //body of the class - iterator has a pointer to a SortedList, and an integer denoting index
+        const SortedList* list;
+        unsigned int index;
+        Node<T>* current;
+
+        //c'tor - this one needs to be in private so only sorted list can call it
+        ConstIterator(Node<T>* nodePointer, unsigned int index){
+
+        }
+        //allow set to call the c'tor
+        friend class SortedList;
+
+    public:
+        //copy c'tor
+        ConstIterator(ConstIterator& toCopy){
+
+
+        }
+        //assignment operator
+        ConstIterator& operator=(const ConstIterator& toCopy){
+
+        }
+        //d'tor
+        ~ConstIterator(){
+
+        }
+        //returns element iterator points to
+        const T& operator*() const{
+
+        }
+        //moves the pointer up one
+        ConstIterator& operator++(){
+
+        }
+        //returns true if the iterators are not the same
+        bool operator !=(const ConstIterator& toCompare){
+
+        }
+
+
+
     };
 }
 
