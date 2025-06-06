@@ -161,15 +161,12 @@ namespace mtm {
             --length;
 
         }
+        unsigned int Length(){
+            return length;
+        }
 
 
         //begin and end iterator methods for sortedlist
-        ConstIterator begin(){
-            return ConstIterator(head->next, 0);
-        }
-        ConstIterator end(){
-            return ConstIterator(nullptr, length);
-        }
         ConstIterator begin() const{
             return ConstIterator(head->next, 0);
         }
@@ -206,43 +203,43 @@ namespace mtm {
     };
 
     template <class T>
-    class SortedList<T>::ConstIterator {
-        //body of the class - iterator has a pointer to a SortedList, and an integer denoting index
-        const SortedList* list;
+    class SortedList<T>::ConstIterator
+    {
+        //body of the class - iterator wil point to a node
         unsigned int index;
         Node<T>* current;
 
-        //c'tor - this one needs to be in private so only sorted list can call it
-        ConstIterator(Node<T>* nodePointer, unsigned int index){
-
+        //c'tor - receives a node and an index
+        ConstIterator(const Node<T>* node, unsigned int givenIndex){
+            index = givenIndex;
+            current = node;
         }
         //allow set to call the c'tor
         friend class SortedList;
 
     public:
         //copy c'tor
-        ConstIterator(ConstIterator& toCopy){
-
-
-        }
+        ConstIterator(ConstIterator& toCopy) = default;
         //assignment operator
-        ConstIterator& operator=(const ConstIterator& toCopy){
-
-        }
+        ConstIterator& operator=(const ConstIterator& toCopy) = default;
         //d'tor
-        ~ConstIterator(){
-
-        }
-        //returns element iterator points to
+        ~ConstIterator() = default;
+        //returns element iterator points to - this can be entirely const, since we don't want the
+        //user to be able to change anything
         const T& operator*() const{
-
+            return current->value;
         }
         //moves the pointer up one
         ConstIterator& operator++(){
-
+            if(!current->next){
+                throw std::out_of_range("Out of Bounds!");
+            }
+            current = current->next;
+            return *this;
         }
         //returns true if the iterators are not the same
         bool operator !=(const ConstIterator& toCompare){
+
 
         }
 
