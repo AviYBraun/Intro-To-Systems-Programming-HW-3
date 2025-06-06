@@ -7,7 +7,7 @@ namespace mtm {
 
     template <typename T>
     struct Node{
-        T value = T();
+        T value;
         Node* next = nullptr;
     };
 
@@ -15,21 +15,21 @@ namespace mtm {
     class SortedList {
         // use dummy head, same as with blockchain
         Node<T>* head = nullptr;
-        unsigned int length = 0;
+        unsigned int size = 0;
 
     public:
         //default c'tor to list with dummy cell
         SortedList() {
             head = new Node<T>;
             head->next = nullptr;
-            length = 0;
+            size = 0;
         };
         //copy c'tor
         SortedList(const SortedList& toCopy){
             //create dummy pointer
             head = new Node<T>;
             head -> next = nullptr;
-            length = 0;
+            size = 0;
 
             Node<T>* source = toCopy.head->next;
             Node<T>* tail = head;
@@ -40,7 +40,7 @@ namespace mtm {
                 tail->next = newNode;
                 tail = newNode;
                 source = source->next;
-                ++length;
+                ++size;
             }
             }
         ~SortedList() {
@@ -67,7 +67,7 @@ namespace mtm {
             //new dummy pointer
             head = new Node<T>;
             head -> next = nullptr;
-            length = 0;
+            size = 0;
             //now actually copy everything
             Node<T>* source = toCopy.head->next;
             Node<T>* tail = head;
@@ -81,18 +81,18 @@ namespace mtm {
                 tail = newNode;
 
                 source = source->next;
-                ++length;
+                ++size;
             }
         return *this;
         }
-        void Insert(const T& x){
+        void insert(const T& x){
             //deal with empty lists
             if(!head->next){
                 Node<T>* newNode = new Node<T>;
                 newNode->value = x;
                 newNode->next = nullptr;
                 head->next = newNode;
-                ++length;
+                ++size;
                 return;
             }
             //traverse the list until you find an element smaller than it
@@ -106,7 +106,7 @@ namespace mtm {
                     //change current node value to x
                     iterator->value = x;
                     iterator->next = newNode;
-                    ++length;
+                    ++size;
                     return;
                 }
                 //keep moving along the list
@@ -126,20 +126,20 @@ namespace mtm {
                 newNode->next = nullptr;
                 iterator->next = newNode;
             }
-            ++length;
+            ++size;
         }
         class ConstIterator;
-        void Remove(ConstIterator iterator){
+        void remove(ConstIterator iterator){
             //this function assumes for the existence of the iterator class and specifically the
             //() method that allows us to access any term in the list
 
             //if the iterator is the end, there is nothing to remove
-            if(iterator == end()){
+            if(!(iterator != end())){
                 return;
             }
 
             unsigned int index = iterator.index;
-            if(index >= length){
+            if(index >= size){
                 throw std::out_of_range("Iterator out of range");
             }
             //deal with removing first term
@@ -147,22 +147,22 @@ namespace mtm {
                 Node<T>* toDelete = head->next;
                 head->next = toDelete->next;
                 delete toDelete;
-                --length;
+                --size;
                 return;
             }
-            Node<T>* previous = head->next;
+            Node<T>* previous = head;
             //move to node right before one we want to remove
             for (unsigned int i = 0; i < index; ++i){
-                previous = previous.next;
+                previous = previous->next;
             }
             Node<T>* toDelete = previous->next;
             previous->next = toDelete->next;
             delete toDelete;
-            --length;
+            --size;
 
         }
-        unsigned int Length(){
-            return length;
+        unsigned int length(){
+            return size;
         }
 
 
@@ -171,35 +171,8 @@ namespace mtm {
             return ConstIterator(head->next, 0);
         }
         ConstIterator end() const{
-            return ConstIterator(nullptr, length);
+            return ConstIterator(nullptr, size);
         }
-
-
-
-        /**
-         *
-         * the class should support the following public interface:
-         * if needed, use =defualt / =delete
-         *
-         * constructors and destructor:
-         * 1. SortedList() - creates an empty list.
-         * 2. copy constructor
-         * 3. operator= - assignment operator
-         * 4. ~SortedList() - destructor
-         *
-         * iterator:
-         * 5. class ConstIterator;
-         * 6. begin method
-         * 7. end method
-         *
-         * functions:
-         * 8. insert - inserts a new element to the list
-         * 9. remove - removes an element from the list
-         * 10. length - returns the number of elements in the list
-         * 11. filter - returns a new list with elements that satisfy a given condition
-         * 12. apply - returns a new list with elements that were modified by an operation
-         */
-
     };
 
     template <class T>
@@ -207,7 +180,7 @@ namespace mtm {
     {
         //body of the class - iterator wil point to a node
         unsigned int index;
-        Node<T>* current;
+        const Node<T>* current;
 
         //c'tor - receives a node and an index
         ConstIterator(const Node<T>* node, unsigned int givenIndex){
@@ -219,7 +192,7 @@ namespace mtm {
 
     public:
         //copy c'tor
-        ConstIterator(ConstIterator& toCopy) = default;
+        ConstIterator(const ConstIterator& toCopy) = default;
         //assignment operator
         ConstIterator& operator=(const ConstIterator& toCopy) = default;
         //d'tor
@@ -231,20 +204,18 @@ namespace mtm {
         }
         //moves the pointer up one
         ConstIterator& operator++(){
-            if(!current->next){
+            //check whether or not we are at end() iterator. if not, even if current-> next
+            //= nullptr, we can move the iterator there, essentially making it end()
+            if(current == nullptr){
                 throw std::out_of_range("Out of Bounds!");
             }
+            ++index;
             current = current->next;
             return *this;
         }
         //returns true if the iterators are not the same
-        bool operator !=(const ConstIterator& toCompare){
-
-
+        bool operator !=(const ConstIterator& toCompare) const{
+            return (!(current == toCompare.current));
         }
-
-
-
     };
 }
-
