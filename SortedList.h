@@ -176,8 +176,22 @@ namespace mtm {
                 if(predicate(*current)){
                     filterApplied.insert(*current);
                 }
+                +current;
             }
             return filterApplied;
+        }
+        SortedList apply(const T&(*operation)(const T&)){
+            ConstIterator current = this->begin();
+            ConstIterator end = this->end();
+            SortedList operationApplied;
+            while(current){
+                //de-reference pointer, check if predicate(pointer) == true
+                if(predicate(*current)){
+                    operationApplied.insert(*current);
+                }
+                ++current;
+            }
+            return operationApplied;
         }
 
         //begin and end iterator methods for sortedlist
