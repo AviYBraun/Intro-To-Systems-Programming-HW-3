@@ -193,7 +193,6 @@ namespace mtm {
             }
             return operationApplied;
         }
-
         //begin and end iterator methods for sortedlist
         ConstIterator begin() const{
             return ConstIterator(head->next, 0);
