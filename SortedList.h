@@ -164,7 +164,21 @@ namespace mtm {
         unsigned int length(){
             return size;
         }
-
+        SortedList filter(bool(*predicate)(const T& value)){
+            //filter receives a predicate function which in turn receives a const T reference
+            //create iterators for original list
+            ConstIterator current = this->begin();
+            ConstIterator end = this->end();
+            //create a new list to send back
+            SortedList filterApplied;
+            while(current){
+                //de-reference pointer, check if predicate(pointer) == true
+                if(predicate(*current)){
+                    filterApplied.insert(*current);
+                }
+            }
+            return filterApplied;
+        }
 
         //begin and end iterator methods for sortedlist
         ConstIterator begin() const{
