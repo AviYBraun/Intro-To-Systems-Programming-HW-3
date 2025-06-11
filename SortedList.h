@@ -68,9 +68,11 @@ namespace mtm {
         }
         void insert(const T& x) {
             Node<T>** current = &head;
-            while (*current && x <= (*current)->value) {
+
+            while (*current && !(x > (*current)->value)) {
                 current = &((*current)->next);
             }
+
             Node<T>* newNode = new Node<T>(x);
             newNode->next = *current;
             *current = newNode;
