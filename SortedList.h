@@ -161,33 +161,27 @@ namespace mtm {
             --size;
 
         }
-        unsigned int length(){
+        unsigned int length() const {
             return size;
         }
         SortedList filter(bool(*predicate)(const T& value)){
             //filter receives a predicate function which in turn receives a const T reference
-            //create iterators for original list
-            ConstIterator current = this->begin();
-            ConstIterator end = this->end();
             //create a new list to send back
             SortedList filterApplied;
-            while(current){
+            //iterate throughout list, checking condition and adding to new list if met
+            for(ConstIterator it = this->begin(); it!= this->end(); ++it){
                 //de-reference pointer, check if predicate(pointer) == true
-                if(predicate(*current)){
-                    filterApplied.insert(*current);
+                if(predicate(*it)){
+                    filterApplied.insert(*it);
                 }
-                ++current;
             }
             return filterApplied;
         }
-        SortedList apply(const T&(*operation)(const T&)){
-            ConstIterator current = this->begin();
-            ConstIterator end = this->end();
+        SortedList apply(T(*operation)(const T&)){
             SortedList operationApplied;
-            while(current){
+            for(ConstIterator it = this->begin(); it!= this->end(); ++it) {
                 //perform operation on de-referenced pointer
-                operationApplied.insert(operation(*current));
-                ++current;
+                operationApplied.insert(operation(*it));
             }
             return operationApplied;
         }

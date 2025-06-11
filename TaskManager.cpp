@@ -1,9 +1,33 @@
 #pragma once
 #include "TaskManager.h"
 #include "Person.h"
+#include "SortedList.h"
+//make static TaskType variable so that I can use lambda expression later - then we can
+//change that variable in the bumpPriorityByType function, and use it in our lambda expression
+//make filter predicate functions
+static TaskType filterType;
+bool filterByType(const Task& task) {
+        return task.getType() == filterType;
+    }
+bool filterOutType(const Task& task) {
+        return task.getType() != filterType;
+    }
+//static priority and operation functions for use in bumpPriorityByType
+static int globalPriority;
+Task bumpPriorityOperator(const Task& task) {
+    int currentPriority = task.getPriority();
+    string currentDescription = task.getDescription();
+    TaskType currentType = task.getType();
+    int currentId = task.getId();
+    //construct updated Task with the information from the task passed
+    Task updated(currentPriority + globalPriority, currentType, currentDescription);
+    updated.setId(currentId);
+    return updated;
+}
+
 
 TaskManager::TaskManager() = default;
-void TaskManager::assignTask(const string &personName, const Task &task) {
+void TaskManager::assignTask(const string& personName, const Task& task) {
     //check if the person is in the array - if he is in, save his array number for future use
 
     bool isin = false;
@@ -39,9 +63,53 @@ void TaskManager::assignTask(const string &personName, const Task &task) {
     currentId++;
     //2) assign the task to the person - use array id that we found for worker
     workers[whereIsWorker].assignTask(copy);
-
-
-
+}
+void TaskManager::completeTask(const string& personName) {
+    //check if the worker is in the company
+    bool isin = false;
+    int whereIsWorker;
+    for(int i = 0; i < 10; i++) {
+        if (workers[i].getName() == personName) {
+            isin = true;
+            whereIsWorker = i;
+            break;
+        }
+    }
+    if(!isin) {
+        return;
+    }
+    //worker is in the company, use whereIsWorker function to find his array number
+    //completeTask function will remove the highest priority task from the list
+    workers[whereIsWorker].completeTask();
+}
+void TaskManager::bumpPriorityByType(TaskType type, int priority) {
+    //if int <= 0, function won't do anything
+    if(priority <= 0) {
+        return;
+    }
+    for(int i = 0; i < numberOfWorkers; i++){
+        //1) make sortedList of current tasks
+        SortedList<Task> currentTasks = workers[i].getTasks();
+        //2) create two lists with filter - one with specific task, one with other task
+        filterType = type;
+        SortedList<Task> listWithType = currentTasks.filter(filterByType);
+        SortedList<Task> listWithoutType = currentTasks.filter(filterOutType);
+        //3) apply the priority raise to listWithType using bumpPriorityOperator from earlier
+        globalPriority = priority;
+        SortedList<Task> bumped = listWithType.apply(bumpPriorityOperator);
+        //4) merge the bumped and listWithoutType into an updated list of worker's tasks
+        SortedList<Task> final;
+        //iterate through both lists, add to 'final' list
+        for(SortedList<Task>::ConstIterator it = bumped.begin(); it != bumped.end(); ++it){
+            final.insert(*it);
+        }
+        for(SortedList<Task>::ConstIterator it = listWithoutType.begin();
+            it!= listWithoutType.end(); ++it) {
+            final.insert(*it);
+        }
+        //finally, assign the person his new tasks list
+        workers[i].setTasks(final);
+    }
 }
 
 
