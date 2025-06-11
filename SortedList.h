@@ -176,7 +176,7 @@ namespace mtm {
                 if(predicate(*current)){
                     filterApplied.insert(*current);
                 }
-                +current;
+                ++current;
             }
             return filterApplied;
         }
