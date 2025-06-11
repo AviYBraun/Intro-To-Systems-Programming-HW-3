@@ -130,7 +130,7 @@ namespace mtm {
         const Node<T>* current;
 
         //c'tor - receives a node and an index
-        ConstIterator(const Node<T>* node, int givenIndex) : current(node), index(givenIndex) {}
+        ConstIterator(const Node<T>* node, int givenIndex) : index(givenIndex), current(node) {}
         //allow set to call the c'tor
         friend class SortedList;
 
