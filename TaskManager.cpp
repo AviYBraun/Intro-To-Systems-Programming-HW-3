@@ -111,7 +111,52 @@ void TaskManager::bumpPriorityByType(TaskType type, int priority) {
         workers[i].setTasks(final);
     }
 }
+void TaskManager::printAllEmployees() const {
+    for(int i = 0; i < numberOfWorkers; i++) {
+        std::cout << workers[i] << std::endl;
+    }
+}
 
+void TaskManager::printTasksByType(TaskType type) const {
+    filterType = type;
+    SortedList<Task> masterTypeList;
+    //iterate through employees
+    for(int i = 0; i < numberOfWorkers; i++) {
+        SortedList<Task> employeeTaskList = workers[i].getTasks();
+        SortedList<Task> temporaryList = employeeTaskList.filter(filterByType);
+        //add temporary list to master
+        for(SortedList<Task>::ConstIterator it = temporaryList.begin();
+            it!= temporaryList.end(); ++it) {
+            masterTypeList.insert(*it);
+        }
+    }
+    //iterate through master list, print using task print method
+    for(SortedList<Task>::ConstIterator it = masterTypeList.begin();
+            it!= masterTypeList.end(); ++it) {
+        std::cout << *it << std::endl;
+    }
+}
 
+void TaskManager::printAllTasks() const {
+    //note: > operator in task.cpp will ensure that == priorities are sorted based on id,
+    //so we needn't worry
+
+    //create master list by going through all the employees
+    SortedList<Task> allTasksList;
+    //iterate through employees
+    for(int i = 0; i < numberOfWorkers; i++) {
+        SortedList<Task> temporaryList = workers[i].getTasks();
+        //iterate through the employee's tasks, add them to allTasksList
+        for(SortedList<Task>::ConstIterator it = temporaryList.begin();
+            it!= temporaryList.end(); ++it) {
+            allTasksList.insert(*it);
+        }
+    }
+    //iterate throughout master list, print all tasks using Task's print method
+    for(SortedList<Task>::ConstIterator it = allTasksList.begin();
+        it != allTasksList.end(); ++it) {
+        std::cout << *it << std::endl;
+    }
+}
 
 
