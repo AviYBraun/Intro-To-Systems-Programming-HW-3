@@ -185,10 +185,8 @@ namespace mtm {
             ConstIterator end = this->end();
             SortedList operationApplied;
             while(current){
-                //de-reference pointer, check if predicate(pointer) == true
-                if(predicate(*current)){
-                    operationApplied.insert(*current);
-                }
+                //perform operation on de-referenced pointer
+                operationApplied.insert(operation(*current));
                 ++current;
             }
             return operationApplied;
