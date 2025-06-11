@@ -15,7 +15,7 @@ namespace mtm {
     class SortedList {
         // use dummy head, same as with blockchain
         Node<T>* head = nullptr;
-        unsigned int size = 0;
+        int size = 0;
 
     public:
         //default c'tor to list with dummy cell

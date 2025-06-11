@@ -1,4 +1,3 @@
-#pragma once
 #include "TaskManager.h"
 #include "Person.h"
 #include "SortedList.h"
