@@ -9,6 +9,7 @@ namespace mtm {
     struct Node{
         T value;
         Node* next = nullptr;
+        Node(const T& val) : value(val), next(nullptr) {}
     };
 
     template <typename T>
@@ -19,26 +20,14 @@ namespace mtm {
 
     public:
         //default c'tor to list with dummy cell
-        SortedList() {
-            head = new Node<T>;
-            head->next = nullptr;
-            size = 0;
-        };
+        SortedList() = default;
         //copy c'tor
-        SortedList(const SortedList& toCopy){
-            //create dummy pointer
-            head = new Node<T>;
-            head -> next = nullptr;
-            size = 0;
-
-            Node<T>* source = toCopy.head->next;
-            Node<T>* tail = head;
-
-            while(source){
-                Node<T>* newNode = new Node<T>;
-                newNode->value = source->value;
-                tail->next = newNode;
-                tail = newNode;
+        SortedList(const SortedList& toCopy) : head(nullptr), size(0){
+            Node<T>* source = toCopy.head;
+            Node<T>** tail = &head;
+            while (source) {
+                *tail = new Node<T>(source->value);
+                tail = &((*tail)->next);
                 source = source->next;
                 ++size;
             }
@@ -64,130 +53,67 @@ namespace mtm {
                 delete current;
                 current = next;
             }
-            //new dummy pointer
-            head = new Node<T>;
-            head -> next = nullptr;
+            head = nullptr;
             size = 0;
             //now actually copy everything
-            Node<T>* source = toCopy.head->next;
-            Node<T>* tail = head;
+            Node<T>* source = toCopy.head;
+            Node<T>** tail = &head;
             while(source){
-                Node<T>* newNode = new Node<T>;
-                newNode->value = source->value;
-                newNode->next = nullptr;
-                //tail is a pointer to a node - the following command sends head's pointer to
-                //newNode, and then tail itself goes to point to that next object
-                tail->next = newNode;
-                tail = newNode;
-
+                *tail = new Node<T>(source->value);
+                tail = &((*tail)->next);
                 source = source->next;
                 ++size;
             }
         return *this;
         }
-        void insert(const T& x){
-            //deal with empty lists
-            if(!head->next){
-                Node<T>* newNode = new Node<T>;
-                newNode->value = x;
-                newNode->next = nullptr;
-                head->next = newNode;
-                ++size;
-                return;
+        void insert(const T& x) {
+            Node<T>** current = &head;
+            while (*current && x <= (*current)->value) {
+                current = &((*current)->next);
             }
-            //traverse the list until you find an element smaller than it
-            Node<T>* iterator = head->next;
-            while(iterator->next){
-                if(x > iterator->value){
-                    //create new node with smaller value, which points at iterator->next
-                    Node<T>* newNode = new Node<T>;
-                    newNode->value = iterator->value;
-                    newNode->next = iterator->next;
-                    //change current node value to x
-                    iterator->value = x;
-                    iterator->next = newNode;
-                    ++size;
-                    return;
-                }
-                //keep moving along the list
-                iterator = iterator->next;
-            }
-            //we've gotten to the end of the list - check > for last list node
-            if(x > iterator->value){
-                Node<T>* newNode = new Node<T>;
-                newNode->value = iterator->value;
-                newNode->next = iterator->next;
-                //change current node value to x
-                iterator->value = x;
-                iterator->next = newNode;
-            } else{
-                Node<T>* newNode = new Node<T>;
-                newNode->value = x;
-                newNode->next = nullptr;
-                iterator->next = newNode;
-            }
+            Node<T>* newNode = new Node<T>(x);
+            newNode->next = *current;
+            *current = newNode;
             ++size;
         }
         class ConstIterator;
-        void remove(ConstIterator iterator){
-            //this function assumes for the existence of the iterator class and specifically the
-            //() method that allows us to access any term in the list
-
-            //if the iterator is the end, there is nothing to remove
-            if(!(iterator != end())){
-                return;
-            }
-
-            unsigned int index = iterator.index;
-            if(index >= size){
+        void remove(ConstIterator iterator) {
+            if (!(iterator != end())) return;
+            int index = iterator.index;
+            if (index >= size) {
                 throw std::out_of_range("Iterator out of range");
             }
-            //deal with removing first term
-            if(index == 0){
-                Node<T>* toDelete = head->next;
-                head->next = toDelete->next;
-                delete toDelete;
-                --size;
-                return;
+            Node<T>** current = &head;
+            for (int i = 0; i < index; ++i) {
+                current = &((*current)->next);
             }
-            Node<T>* previous = head;
-            //move to node right before one we want to remove
-            for (unsigned int i = 0; i < index; ++i){
-                previous = previous->next;
-            }
-            Node<T>* toDelete = previous->next;
-            previous->next = toDelete->next;
+            Node<T>* toDelete = *current;
+            *current = toDelete->next;
             delete toDelete;
             --size;
-
         }
-        unsigned int length() const {
+        int length() const {
             return size;
         }
-        SortedList filter(bool(*predicate)(const T& value)){
-            //filter receives a predicate function which in turn receives a const T reference
-            //create a new list to send back
-            SortedList filterApplied;
-            //iterate throughout list, checking condition and adding to new list if met
-            for(ConstIterator it = this->begin(); it!= this->end(); ++it){
-                //de-reference pointer, check if predicate(pointer) == true
-                if(predicate(*it)){
-                    filterApplied.insert(*it);
+        SortedList filter(bool(*predicate)(const T&)) {
+            SortedList filtered;
+            for (ConstIterator it = begin(); it != end(); ++it) {
+                if (predicate(*it)) {
+                    filtered.insert(*it);
                 }
             }
-            return filterApplied;
+            return filtered;
         }
-        SortedList apply(T(*operation)(const T&)){
-            SortedList operationApplied;
-            for(ConstIterator it = this->begin(); it!= this->end(); ++it) {
-                //perform operation on de-referenced pointer
-                operationApplied.insert(operation(*it));
+        SortedList apply(T(*operation)(const T&)) {
+            SortedList applied;
+            for (ConstIterator it = begin(); it != end(); ++it) {
+                applied.insert(operation(*it));
             }
-            return operationApplied;
+            return applied;
         }
         //begin and end iterator methods for sortedlist
         ConstIterator begin() const{
-            return ConstIterator(head->next, 0);
+            return ConstIterator(head, 0);
         }
         ConstIterator end() const{
             return ConstIterator(nullptr, size);
@@ -198,14 +124,11 @@ namespace mtm {
     class SortedList<T>::ConstIterator
     {
         //body of the class - iterator wil point to a node
-        unsigned int index;
+        int index;
         const Node<T>* current;
 
         //c'tor - receives a node and an index
-        ConstIterator(const Node<T>* node, unsigned int givenIndex){
-            index = givenIndex;
-            current = node;
-        }
+        ConstIterator(const Node<T>* node, int givenIndex) : current(node), index(givenIndex) {}
         //allow set to call the c'tor
         friend class SortedList;
 
