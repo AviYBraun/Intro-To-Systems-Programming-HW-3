@@ -1,0 +1,120 @@
+commit 669bb6d51368c9b74861725f3b19ba341405c58b
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 18:32:24 2025 +0300
+
+    passed tests
+
+commit b4866658de6622d188fb27c81898e06766ef484a
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 16:43:18 2025 +0300
+
+    aaaaand, we've compiled successfully. whoof!
+
+commit 7b4aa357c8d0535bb71c42cda9e721144750d8c8
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 16:41:07 2025 +0300
+
+    fixed massive problem stemming from 1) lack of Task default() c'tor, and 2) because of that, making the sortedlist with a dummy head created big problems
+
+commit 6f0e12905e17cfbf3b753c57dca9a0d7f8e4c368
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 15:54:08 2025 +0300
+
+    currently lost
+
+commit bc6f3c258fd4bdc785f4f08baa7661c7bf0c4396
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 14:27:36 2025 +0300
+
+    implemented print functions - pre tests
+
+commit 4a488954cee7cbc734d3b3ddc80b2c4d75ab18c4
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 13:45:39 2025 +0300
+
+    implemented intitial version of bumpPriorityByTask - untested
+
+commit 2f1f9824c38967e02bfd4525f27b004da8da601a
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 10:10:01 2025 +0300
+
+    fixed critical error in apply function - pasted the logic from filter and forgot to change implementation for apply function
+
+commit 8b19c2f7c92876187a02edd39f8ae729014a0d54
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Wed Jun 11 10:04:14 2025 +0300
+
+    fixed ++ bug for filter function
+
+commit 0dddd968e75492881c02a331734a1b98e4a8a9c1
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Tue Jun 10 20:26:46 2025 +0300
+
+    created TaskManager class (initial product), as well as assign method. Still early in code, expect to change a lot
+
+commit 0f45158e544920bd47200b02296d7a323a0ae1eb
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Tue Jun 10 17:31:56 2025 +0300
+
+    commit in order to checkout
+
+commit fa0309a4afadf330ef8e23ddbc19dee2e33b3324
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Tue Jun 10 17:24:22 2025 +0300
+
+    fixed bug in while loop (lack of ++iterator), and added untested apply function
+
+commit 45dc9616929e96ef034c2983fb376d0407b7a8aa
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Tue Jun 10 17:20:12 2025 +0300
+
+    initial filter function - not tested
+
+commit beb956a0126d38c7cdf609ed275286e602a533a2
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Fri Jun 6 13:42:54 2025 +0300
+
+    post tests - still to make - filter and apply methods
+
+commit 21298c0667b94e58e68f2a9c76eb503113beac84
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Fri Jun 6 12:26:57 2025 +0300
+
+    fixed the iterator class, added default constructors and destructor, and ++ method
+
+commit adef8437adc7f94efdfa8984901865c257cb4cf2
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Thu Jun 5 18:33:14 2025 +0300
+
+    added basic layouts of iterator class
+    added remove function, assuming for implementation of iterator methods
+
+commit 667f2cc1a90f6590d47eda296ea5a164b4fb4175
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Thu Jun 5 12:00:47 2025 +0300
+
+    added d'tor
+
+commit fb6859a8a30fd7637d37bc9bb8a36913b84dff4e
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Thu Jun 5 11:56:15 2025 +0300
+
+    added assignment operator and insert method
+
+commit d00b782ed0af4344060800547520121e30feb3b5
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Thu Jun 5 10:39:07 2025 +0300
+
+    added default constructor and copy constructor
+
+commit 188fe6e19e9693b7bab815ba0d4dc33d8bc37de6
+Author: Avi Braun <avib1027@gmail.com>
+Date:   Thu Jun 5 00:00:43 2025 +0300
+
+    added git ignore file
+
+commit d574ed91189f2e4bd2f8869d7fe4ffc909f576ec
+Author: Ron Raphaeli <102682845+ronraphaeli@users.noreply.github.com>
+Date:   Tue Jun 3 19:16:50 2025 +0300
+
+    Add files via upload
