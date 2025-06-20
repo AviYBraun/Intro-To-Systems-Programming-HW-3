@@ -11,17 +11,24 @@ namespace mtm {
         Node* next = nullptr;
         Node(const T& val) : value(val), next(nullptr) {}
     };
-
+/**
+ * @brief template Class for Sorted List
+ */
     template <typename T>
     class SortedList {
-        // use dummy head, same as with blockchain
         Node<T>* head = nullptr;
         int size = 0;
 
     public:
-        //default c'tor to list with dummy cell
+        /**
+    * @brief default constructor
+    */
         SortedList() = default;
-        //copy c'tor
+        /**
+    * @brief copy constructor
+    *
+    * @param toCopy reference to the list we want to copy
+    */
         SortedList(const SortedList& toCopy) : head(nullptr), size(0){
             Node<T>* source = toCopy.head;
             Node<T>** tail = &head;
@@ -32,6 +39,9 @@ namespace mtm {
                 ++size;
             }
             }
+        /**
+    * @brief basic destructor
+    */
         ~SortedList() {
             Node<T>* current = head;
             while(current){
@@ -40,13 +50,16 @@ namespace mtm {
                 current = next;
             }
         }
-        //assignment operator - returns reference
+        /**
+    * @brief assignment operator overload
+    *
+    * @param toCopy reference to the list we want to copy
+    * @return reference to the newly assigned list
+    */
         SortedList& operator =(const SortedList& toCopy){
-            //avoid self-assignment
             if (this == &toCopy){
                 return *this;
             }
-            //delete info from current - loop through and delete
             Node<T>* current = head;
             while(current){
                 Node<T>* next = current->next;
@@ -55,7 +68,6 @@ namespace mtm {
             }
             head = nullptr;
             size = 0;
-            //now actually copy everything
             Node<T>* source = toCopy.head;
             Node<T>** tail = &head;
             while(source){
@@ -66,6 +78,11 @@ namespace mtm {
             }
         return *this;
         }
+        /**
+    * @brief insert method
+    *
+    * @param x type determined variable to add to list
+    */
         void insert(const T& x) {
             Node<T>** current = &head;
 
@@ -78,7 +95,13 @@ namespace mtm {
             *current = newNode;
             ++size;
         }
+
         class ConstIterator;
+        /**
+    * @brief remove method to remove items based on iterator entry
+    *
+    * @param iterator points to index of item we want removed
+    */
         void remove(ConstIterator iterator) {
             if (!(iterator != end())) return;
             int index = iterator.index;
@@ -94,9 +117,18 @@ namespace mtm {
             delete toDelete;
             --size;
         }
+        /**
+    * @brief method returning length of the list
+    */
         int length() const {
             return size;
         }
+        /**
+    * @brief method which creates a new list based on filter through old list
+    *
+    * @param predicate bool function we will use to filter through list
+    * @return filtered list
+    */
         SortedList filter(bool(*predicate)(const T&)) {
             SortedList filtered;
             for (ConstIterator it = begin(); it != end(); ++it) {
@@ -106,6 +138,12 @@ namespace mtm {
             }
             return filtered;
         }
+        /**
+    * @brief method which applies an operation to items in list
+    *
+    * @param operation operation function which we will use to operate on terms
+    * @return applied list
+    */
         SortedList apply(T(*operation)(const T&)) {
             SortedList applied;
             for (ConstIterator it = begin(); it != end(); ++it) {
@@ -113,43 +151,63 @@ namespace mtm {
             }
             return applied;
         }
-        //begin and end iterator methods for sortedlist
+        /**
+    * @brief returns begin iterator
+    */
         ConstIterator begin() const{
             return ConstIterator(head, 0);
         }
+        /**
+    * @brief returns end iterator
+    */
         ConstIterator end() const{
             return ConstIterator(nullptr, size);
         }
     };
-
+    /**
+        * @brief subclass ConstIterator
+        *
+        */
     template <class T>
+    /**
+    * @brief basic format of iterator, including index member
+    */
     class SortedList<T>::ConstIterator
     {
-        //body of the class - iterator wil point to a node
         int index;
         const Node<T>* current;
-
-        //c'tor - receives a node and an index
+        /**
+    * @brief constructor - inside private to ensure it cannot be used outside of class
+    *
+    * @param node pointer to node iterator points to
+    * @param givenIndex index of the given node
+    */
         ConstIterator(const Node<T>* node, int givenIndex) : index(givenIndex), current(node) {}
-        //allow set to call the c'tor
         friend class SortedList;
 
     public:
-        //copy c'tor
+        /**
+    * @brief default copy c'tor
+    */
         ConstIterator(const ConstIterator& toCopy) = default;
-        //assignment operator
+        /**
+    * @brief default assignment operator
+    */
         ConstIterator& operator=(const ConstIterator& toCopy) = default;
-        //d'tor
+        /**
+    * @brief default d'tor
+    */
         ~ConstIterator() = default;
-        //returns element iterator points to - this can be entirely const, since we don't want the
-        //user to be able to change anything
+        /**
+    * @brief * operator for referencing
+    */
         const T& operator*() const{
             return current->value;
         }
-        //moves the pointer up one
+        /**
+    * @brief ++ increment operator
+    */
         ConstIterator& operator++(){
-            //check whether or not we are at end() iterator. if not, even if current-> next
-            //= nullptr, we can move the iterator there, essentially making it end()
             if(current == nullptr){
                 throw std::out_of_range("Out of Bounds!");
             }
@@ -157,7 +215,9 @@ namespace mtm {
             current = current->next;
             return *this;
         }
-        //returns true if the iterators are not the same
+        /**
+    * @brief != operator
+    */
         bool operator !=(const ConstIterator& toCompare) const{
             return (!(current == toCompare.current));
         }

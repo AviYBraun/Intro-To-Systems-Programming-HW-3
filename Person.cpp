@@ -40,7 +40,6 @@ const Task& Person::getHighestPriorityTask() const {
     return (*m_tasks.begin());
 }
 
-// Overloaded operators
 ostream& operator<<(ostream& os, const Person& person) {
     os << "Person: " << person.m_name << endl;
     // Assuming the SortedList has an appropriate method to list tasks

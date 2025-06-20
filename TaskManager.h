@@ -13,13 +13,10 @@ private:
      * @brief Maximum number of persons the TaskManager can handle.
      */
     static const int MAX_PERSONS = 10;
-    //TaskManager will hold an array of person - exactly ten because it is the max
     Person workers[10];
-    //counter to make sure that we don't add to many people
     int numberOfWorkers = 0;
-    //counter for id assignment purposes
     int currentId = 0;
-    // Note - Additional private fields and methods can be added if needed.
+
 
 
 public:
