@@ -18,6 +18,7 @@ Project Core
      - Type Categorization: Supports various TaskType enums (e.g., Development, Testing, CustomerSupport) to allow for bulk operations.
        
 Usage Example:
+
   // Create a manager
   TaskManager boss;
   
